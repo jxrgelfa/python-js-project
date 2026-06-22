@@ -1,3 +1,22 @@
+from typing import Annotated
+from fastapi import HTTPException, Path, Query, APIRouter
+from schemas.articulos import LibroSchema
+
+articulos_router = APIRouter()
+
+dict_not_found:dict = {
+    404: {
+        "description": "Si el artículo no se encuentra en la lista",
+        "content": {
+            "aplication/json": {
+                "example": {
+                    "detail": "Articulo no encontrado"
+                }
+            }
+        }
+        }
+    }
+
 libros = [
     { "id": 1, "nombre":"El Principito", "precio": 11000, "activo": True},
     { "id": 2, "nombre": "Don Quijote de la Mancha", "precio": 27900, "activo": True},
@@ -12,3 +31,22 @@ libros = [
     { "id": 11, "nombre": "Buscando a Nemo", "precio": 12500, "activo": True},
     { "id": 12, "nombre": "El código Da Vinci", "precio": 22500, "activo": True},
 ]
+
+@articulos_router.get("/", response_model=list[LibroSchema])
+async def get_articulos():
+    articulos_disponibles = []
+    for libro in libros:
+        if libro["activo"]:
+            articulos_disponibles.append(libro)
+    return articulos_disponibles
+
+@articulos_router.get(
+        "/{id}",
+        responses=dict_not_found,
+        response_model=LibroSchema
+        ) 
+async def get_productos_id(id: Annotated[int, Path(gt=0, description="El ID debe ser mayor a cero")]):
+    for libro in libros:
+        if libro["id"] == id:
+            return libro
+    raise HTTPException(status_code=404, detail="Producto no encontrado")
