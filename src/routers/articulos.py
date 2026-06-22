@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import HTTPException, Path, Query, APIRouter
 from schemas.articulos import LibroSchema
 
-articulos_router = APIRouter()
+articulos_routers = APIRouter()
 
 dict_not_found:dict = {
     404: {
@@ -32,7 +32,7 @@ libros = [
     { "id": 12, "nombre": "El código Da Vinci", "precio": 22500, "activo": True},
 ]
 
-@articulos_router.get("/", response_model=list[LibroSchema])
+@articulos_routers.get("/", response_model=list[LibroSchema])
 async def get_articulos():
     articulos_disponibles = []
     for libro in libros:
@@ -40,7 +40,7 @@ async def get_articulos():
             articulos_disponibles.append(libro)
     return articulos_disponibles
 
-@articulos_router.get(
+@articulos_routers.get(
         "/{id}",
         responses=dict_not_found,
         response_model=LibroSchema
@@ -50,3 +50,10 @@ async def get_productos_id(id: Annotated[int, Path(gt=0, description="El ID debe
         if libro["id"] == id:
             return libro
     raise HTTPException(status_code=404, detail="Producto no encontrado")
+
+@articulos_routers.post(
+        "/libros",
+        response_model=list[LibroSchema])
+async def publicar_libro(nuevo_libro:LibroSchema):
+    libros.append(nuevo_libro.model_dump())
+    return libros
