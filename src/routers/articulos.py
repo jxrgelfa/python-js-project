@@ -1,14 +1,14 @@
 from typing import Annotated
 from fastapi import HTTPException, Path, Query, APIRouter
-from schemas.articulos import LibroSchema
+from schemas.articulos import LibroSchema, LibroUpdateSchema
 
 articulos_routers = APIRouter()
 
-dict_not_found:dict = {
+dict_not_found: dict = {
     404: {
         "description": "Si el artículo no se encuentra en la lista",
         "content": {
-            "aplication/json": {
+            "application/json": {
                 "example": {
                     "detail": "Articulo no encontrado"
                 }
@@ -57,3 +57,34 @@ async def get_productos_id(id: Annotated[int, Path(gt=0, description="El ID debe
 async def publicar_libro(nuevo_libro:LibroSchema):
     libros.append(nuevo_libro.model_dump())
     return libros
+
+@articulos_routers.put("/libros/{id}",responses=dict_not_found, response_model=LibroSchema)
+async def actualizar_libros(
+    id:Annotated[int,Path(gt=0)],
+    libro_editar:LibroUpdateSchema
+): 
+    for libro in libros: 
+        if libro["id"] == id:
+            libro["nombre"] = libro_editar.nombre
+            libro["precio"] = libro_editar.precio
+            libro["activo"] = libro_editar.activo
+            return libro
+    raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+@articulos_routers.delete(
+    "/libros/{id}",
+    responses = dict_not_found,
+    response_model = LibroSchema,
+)
+async def eliminar_libro(
+    id:Annotated[int,Path(gt=0)],
+    logico:Annotated[bool,Query(descrption="Indica si se debe eliminar un libro o no")] = True
+) -> LibroSchema: 
+    for libro in libros: 
+        if libro ["id"] == id:
+            if logico: 
+                libro ["activo"] = False
+            else: 
+                LibroSchema.remove(libro)
+            return libro
+    raise HTTPException(status_code=404, detail="Libro no encontrado")
