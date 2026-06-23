@@ -4,7 +4,7 @@ from schemas.articulos import LibroSchema, LibroUpdateSchema
 
 articulos_routers = APIRouter()
 
-dict_not_found: dict = {
+DICT_NOT_FOUND: dict = {
     404: {
         "description": "Si el artículo no se encuentra en la lista",
         "content": {
@@ -33,7 +33,7 @@ libros = [
 ]
 
 @articulos_routers.get("/", response_model=list[LibroSchema])
-async def get_articulos():
+async def get_libros():
     articulos_disponibles = []
     for libro in libros:
         if libro["activo"]:
@@ -42,10 +42,10 @@ async def get_articulos():
 
 @articulos_routers.get(
         "/{id}",
-        responses=dict_not_found,
+        responses=DICT_NOT_FOUND,
         response_model=LibroSchema
         ) 
-async def get_productos_id(id: Annotated[int, Path(gt=0, description="El ID debe ser mayor a cero")]):
+async def get_libros_id(id: Annotated[int, Path(gt=0, description="El ID debe ser mayor a cero")]):
     for libro in libros:
         if libro["id"] == id:
             return libro
@@ -58,7 +58,7 @@ async def publicar_libro(nuevo_libro:LibroSchema):
     libros.append(nuevo_libro.model_dump())
     return libros
 
-@articulos_routers.put("/libros/{id}",responses=dict_not_found, response_model=LibroSchema)
+@articulos_routers.put("/libros/{id}",responses=DICT_NOT_FOUND, response_model=LibroSchema)
 async def actualizar_libros(
     id:Annotated[int,Path(gt=0)],
     libro_editar:LibroUpdateSchema
@@ -73,7 +73,7 @@ async def actualizar_libros(
 
 @articulos_routers.delete(
     "/libros/{id}",
-    responses = dict_not_found,
+    responses = DICT_NOT_FOUND,
     response_model = LibroSchema,
 )
 async def eliminar_libro(

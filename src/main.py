@@ -21,4 +21,3 @@ app.add_middleware(
 )
 
 app.include_router(articulos_routers, tags=["Articulos"], prefix="/articulos")
-
