@@ -55,6 +55,9 @@ async def get_libros_id(id: Annotated[int, Path(gt=0, description="El ID debe se
         "/",
         response_model=list[LibroSchema])
 async def publicar_libro(nuevo_libro:LibroSchema):
+    for libro in libros:
+        if libro["id"] == nuevo_libro.id:
+            raise HTTPException(status_code=404, detail="Ya existe un libro con ese id")
     libros.append(nuevo_libro.model_dump())
     return libros
 
