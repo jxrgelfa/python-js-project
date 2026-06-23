@@ -10,7 +10,7 @@ app.title = "LIBRERIA"
 
 app.version = "1.0"
 
-app.include_router(articulos_routers, tags=["Articulos"], prefix="/articulos")
+app.include_router(articulos_routers, tags=["Libros"], prefix="/libros")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,4 +20,3 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(articulos_routers, tags=["Articulos"], prefix="/articulos")

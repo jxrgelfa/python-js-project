@@ -52,13 +52,13 @@ async def get_libros_id(id: Annotated[int, Path(gt=0, description="El ID debe se
     raise HTTPException(status_code=404, detail="Producto no encontrado")
 
 @articulos_routers.post(
-        "/libros",
+        "/",
         response_model=list[LibroSchema])
 async def publicar_libro(nuevo_libro:LibroSchema):
     libros.append(nuevo_libro.model_dump())
     return libros
 
-@articulos_routers.put("/libros/{id}",responses=DICT_NOT_FOUND, response_model=LibroSchema)
+@articulos_routers.put("/{id}",responses=DICT_NOT_FOUND, response_model=LibroSchema)
 async def actualizar_libros(
     id:Annotated[int,Path(gt=0)],
     libro_editar:LibroUpdateSchema
@@ -72,7 +72,7 @@ async def actualizar_libros(
     raise HTTPException(status_code=404, detail="Libro no encontrado")
 
 @articulos_routers.delete(
-    "/libros/{id}",
+    "/{id}",
     responses = DICT_NOT_FOUND,
     response_model = LibroSchema,
 )
