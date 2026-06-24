@@ -1,4 +1,12 @@
+//=============================================
+// CONFIGURACION
+// ============================================
+
 const API_URL = "http://127.0.0.1:8000/libros/"
+
+//=============================================
+// LECTURA 
+// ============================================
 
 async function obtenerLibros(){
     try {
@@ -9,6 +17,11 @@ async function obtenerLibros(){
         console.error("Error al obtener los libros", err);
     }
 }
+
+
+//=============================================
+// CREAR
+// ============================================
 
 
 async function crearLibro(nuevoLibro) {
@@ -42,6 +55,9 @@ formularioCrear.addEventListener("submit", (e) => {
 
 })
 
+//=============================================
+// EDITAR || Buscar por ID y modificar existentes
+// ============================================
 
 async function editarLibro(nuevoLibro, id) {
     try{
@@ -96,14 +112,20 @@ formularioEditar.addEventListener("submit", (e) =>{
     editarLibro(datosFormulario, id)
 })
 
-//-------local storage y render-----// 
+// ============================================================
+// FAVORITOS — Gestion con localStorage
+// ============================================================
 
+
+// Devuelve los ID favoritos guardados localmente
 function getFavorites(){
     const favs = localStorage.getItem('libros_favs');
     return favs ? JSON.parse(favs) : [];
 }
 
-function toggleFavorite(libroId){
+
+// Agrega/Quita libros de favoritos
+function toggleFavorite(libroId){ 
     let favs = getFavorites()
     const idStr = String(libroId)
     if (favs.includes(idStr)){
@@ -113,6 +135,11 @@ function toggleFavorite(libroId){
     }
     localStorage.setItem('libros_favs', JSON.stringify(favs))
 }
+ 
+// ============================================================
+// RENDER — Mostrar libros como tarjetas en el DOM
+// ============================================================
+
 
 function renderLibros(libros){
     document.getElementById('librosContainer').innerHTML = '';
@@ -143,7 +170,7 @@ function renderLibros(libros){
     
 }
 
-async function cargarLibros(){
+async function cargarLibros(){ // Carga los libros desde la API y lo renderiza
     try {
         const res = await fetch(API_URL);
         const libros = await res.json();
