@@ -49,7 +49,8 @@ formularioCrear.addEventListener("submit", (e) => {
         id: parseInt(document.getElementById("id").value),
         nombre: document.getElementById("nombre").value,
         precio: parseFloat(document.getElementById("precio").value),
-        activo: document.getElementById("activo").checked
+        activo: document.getElementById("activo").checked,
+        imagen: document.getElementById('imagen').value
     }
 
     crearLibro(datosFormulario)
