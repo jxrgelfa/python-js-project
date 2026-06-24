@@ -180,4 +180,10 @@ async function cargarLibros(){ // Carga los libros desde la API y lo renderiza
     }
 }
 
+
+ 
+// ============================================================
+// INICIALIZACIÓN
+// ============================================================
+
 cargarLibros();
