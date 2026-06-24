@@ -135,6 +135,19 @@ function toggleFavorite(libroId){
     }
     localStorage.setItem('libros_favs', JSON.stringify(favs))
 }
+
+// Guarda el objeto completo del libro en localStorage
+function saveLibroData(libro){
+    const todos = getLibrosData()
+    todos[String(libro.id)] = libro
+    localStorage.setItem('libros_data', JSON.stringify(todos))
+}
+
+// Devuelve todo los objetos de libros cacheados
+function getLibrosData(){
+    const data = localStorage.getItem('libros_data')
+    return data ? JSON.parse(data) : {}
+}
  
 // ============================================================
 // RENDER — Mostrar libros como tarjetas en el DOM
@@ -181,6 +194,29 @@ async function cargarLibros(){ // Carga los libros desde la API y lo renderiza
 }
 
 
+// ============================================================
+// VISTA FAVORITOS — Mostrar solo los libros guardados
+// ============================================================
+
+function renderFavoritos(){
+    const favIds = getFavorites();
+    const todosLosLibros = getLibrosData();
+
+    const librosFav = favIds
+        .map(id => todosLosLibros[id])
+        .filter(Boolean); // filtra IDs que ya no existen en cache
+
+    renderLibros(librosFav);
+
+    // Resalta visualmente que estamos en la vista de favoritos
+    document.getElementById('librosContainer').insertAdjacentHTML(
+        'afterbegin',
+        `<p class="text-center w-full text-yellow-400 font-bold mb-4">
+            ❤️ Mostrando ${librosFav.length} favorito(s) — 
+            <button onclick="cargarLibros()" class="underline">Ver todos</button>
+        </p>`
+    );
+}
  
 // ============================================================
 // INICIALIZACIÓN
