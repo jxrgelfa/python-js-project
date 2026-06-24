@@ -34,6 +34,7 @@ async function crearLibro(nuevoLibro) {
 
         const datos = await respuesta.json();
         console.log("respuesta POST", datos);
+        await cargarLibros();
     } catch (error) {
         console.error("Error al crear el libro", error);
     }
@@ -69,6 +70,7 @@ async function editarLibro(nuevoLibro, id) {
 
         const datos = await respuesta.json();
         console.log("respuesta PUT: ", datos)
+        await cargarLibros();
 
     }catch (error) {
         console.error("Eror al editar el libro;", error);
@@ -113,6 +115,7 @@ formularioEditar.addEventListener("submit", (e) =>{
 
     editarLibro(datosFormulario, id)
 })
+//-------local storage y render-----// 
 
 
 
@@ -163,6 +166,14 @@ function getLibrosData(){
 // RENDER — Mostrar libros como tarjetas en el DOM
 // ============================================================
 
+imagenes = {
+    1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7svZcUJPdEdxpolnznz3owj-Ca1GOYQ6oSprBcmT76i0zLUp1",
+    2: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiUWBKhZWHc3gDJbICGgoCgXbHHVXkoL199duFHhP4oeXVlzcF",
+    3: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-LP8BMltFVfBlDhoG_InKMECctld__Ke1JuIGURhjLO5v4YOEMpPszKMI3vX4iOYaREKYKyE71eWCXVgZokbyk3pazoY3__GYhI9UzPIo&s=10",
+    4: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACMAAAA4CAMAAABAFrEzAAAAmVBMVEUAAAAEBAQCAgIPDw8wMDJzc3MXFxcfHyATExRsbGwjIyQaGhtKSkocHBwICAgpKSpBQUG1tbVZWVleXl6hoaE1NTVlZWVUVFSEhIS9vb2srKw8PDxYARA8AQt0AhWRARowAQl7ARYkAQcZAQUpAQggAQZ7e3uOjo7JycmWlpZoARNOAg5hARJGAQ2lAx2aAhuGAxi0AyDa2tpUkeXxAAAC5ElEQVQ4ja2Ve3eiMBDFL00IJJAEIYAvrFWLr7rt7vf/cDvBx2rB3X825yh68svMnZsZRfDPZfDvFeDlfzHrBebzOZrDAceP+ek4PzRzLJan07E5LBfL+drHecXijZjXBfBxJPpHs8DnFx04fa1PP45drtflYv7WnN6+Ghzmy098nd5WnxT6cFqsD/jpmeXHarN+X75vggabDVYnvDfNEqvV5r3ZLLF+rrm614y6aNtChhizcIas3gYoCllUGNs/TIQRpJzSu1PMQU0cwEI6M773hxjnPKPLETDdwe6lLNLJHWMdxUlTh60stqHU2b4eV3IMNxv02SApB3wGwsqGCWmvsipPq7pCHmY8lA/3NTGkBbMp8q1Id1ruE+ysc/qeGdXEGLQu3ZcVdjVpdbPR6CHXKC+nrSpobYuWC5e5POSuDO/jnMWyv/QGTJEXqPMZ6hlYLaGq6DtDmlE4Z5X3w6GeupL1Ge/tXkbYl3YKOvGrx4Aqadm0SuHafBrKtA0Hcp2XP9xtir7mF6gMpUVqM5HqKGUgk5CmjwxdcPYLLemaeDltil3azh6ZcKTqcpfDt9AZdHzUPmjOZDmVs5nfnFRiIkNXbnM+RmDMjdEx04lGIBImMiEyiBK2ZFYpZRXD0zmNbdw9jVLPmEjd0cOMvpjIvMOMxqPPsPPQBOrspogGmMtcGX373mOS6x7TSLpnn7mOZ8JFEA3XzkhwYqNEaK6ZiL1zPYZsC3gSx3HEo1hoxYM+Y2EiQ7bQrtLKf+rX3skxXCDmBpr74r8zrPOPcdYx/oVeHJGcoyUQxEV2qK7k0qpRZDldvRlk4mt9iusz/zSOimLOtB5kznoCZUlPTOQQQ3UZbTk1UEwMuDV9JvDt9eJFdQx1RmKGPcSNGcqFrlzfWDGPnjFxt2O8z3SpwSBzSyYsGBuMQ713Gb3k+vPxTXMqwyqUMsxoQ13/axX6yyT+4qNbWyvK+X0ZGmEWics3uv7f9D8u3/v+yUcAAAAASUVORK5CYII="
+
+}
+
 
 function renderLibros(libros){
     document.getElementById('librosContainer').innerHTML = '';
@@ -174,7 +185,7 @@ function renderLibros(libros){
     libros.forEach(libro => {
         const card = document.createElement('div');
         card.className = 'bg-black p-4 rounded shadow text-center hover:shadow-lg transition';
-        const portada = libro.imagen;
+        const portada = imagenes[libro.id];
         const titulo = libro.nombre;
         const precio = libro.precio;
         const id = libro.id;
@@ -233,3 +244,10 @@ function renderFavoritos(){
 // ============================================================
 
 cargarLibros();
+cargarLibros();
+
+
+
+    
+    
+    
