@@ -57,7 +57,7 @@ async def get_libros_id(id: Annotated[int, Path(gt=0, description="El ID debe se
 async def publicar_libro(nuevo_libro:LibroSchema):
     for libro in libros:
         if libro["id"] == nuevo_libro.id:
-            raise HTTPException(status_code=404, detail="Ya existe un libro con ese id")
+            raise HTTPException(status_code=400, detail="Ya existe un libro con ese id")
     libros.append(nuevo_libro.model_dump())
     return libros
 
@@ -88,6 +88,6 @@ async def eliminar_libro(
             if logico: 
                 libro ["activo"] = False
             else: 
-                LibroSchema.remove(libro)
+                libros.remove(libro)
             return libro
     raise HTTPException(status_code=404, detail="Libro no encontrado")

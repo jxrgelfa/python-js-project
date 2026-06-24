@@ -42,7 +42,6 @@ formularioCrear.addEventListener("submit", (e) => {
 
 })
 
-<<<<<<< HEAD
 
 async function editarLibro(nuevoLibro, id) {
     try{
@@ -67,7 +66,7 @@ async function buscarPorId() {
     if (!id) {alert("Debe ingresar un ID");return;}
 
     try{
-        const respuesta = await fetch(`${API_URL}${id}/`);
+        const respuesta = await fetch(`${API_URL}${id}`);
         const articulo = await respuesta.json();
 
         document.getElementById("edit-id").value = articulo.id;
@@ -96,7 +95,7 @@ formularioEditar.addEventListener("submit", (e) =>{
 
     editarLibro(datosFormulario, id)
 })
-=======
+
 //-------local storage y render-----// 
 
 function getFavorites(){
@@ -155,4 +154,3 @@ async function cargarLibros(){
 }
 
 cargarLibros();
->>>>>>> 0fe178383799f18fc3011273240e9301347f56bc
