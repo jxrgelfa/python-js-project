@@ -32,6 +32,11 @@ libros = [
     { "id": 12, "nombre": "El código Da Vinci", "precio": 22500, "activo": True},
 ]
 
+
+##########################
+# METODO GET
+##########################
+
 @articulos_routers.get("/", response_model=list[LibroSchema])
 async def get_libros():
     articulos_disponibles = []
