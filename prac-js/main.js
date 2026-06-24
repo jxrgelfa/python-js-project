@@ -112,6 +112,14 @@ formularioEditar.addEventListener("submit", (e) =>{
     editarLibro(datosFormulario, id)
 })
 
+
+
+//=============================================
+// BORRAR | Buscar por ID y borrar
+// ============================================
+
+
+
 // ============================================================
 // FAVORITOS — Gestion con localStorage
 // ============================================================
