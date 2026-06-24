@@ -112,20 +112,50 @@ formularioEditar.addEventListener("submit", (e) =>{
         nombre: document.getElementById("edit-nombre").value,
         precio: parseFloat(document.getElementById("edit-precio").value),
         activo: document.getElementById("edit-activo").checked,
-        imagen: document.getElementById("imagen").value || null
+        imagen: document.getElementById("edit-imagen").value || null
     }
 
     editarLibro(datosFormulario, id)
 })
-//-------local storage y render-----// 
-
 
 
 //=============================================
 // BORRAR | Buscar por ID y borrar
 // ============================================
 
+async function borrarLibro(id) { 
+    try {
+        const respuesta = await fetch(`${API_URL}${id}?logico=true`,{
+        method: "DELETE"
+        });
 
+        if (respuesta.ok){
+            const datos = await respuesta.json();
+            console.log("Libro eliminado en la PI:", datos);
+            alert(`Articulo con ID ${id} eliminado con exito`);
+
+            await cargarLibros();
+            await obtenerLibros();
+        }else{
+            alert("No se pudo eliminar el libro. Verifiqeu el ID");
+        }
+    }catch (error) {
+        console.error("Eror al borrar el libro:", error);
+    }
+}
+
+async function borrarDesdeBusqueda() {
+    const id = parseInt(document.getElementById("buscar-id").value);
+    if (!id){ 
+        alert("Debe ingresar un ID en el buscador para eliminar"); 
+        return;   
+    }
+
+    const confirmar = confirm(`¿Estas seguro que desea eliminar el libro con ID ${id}?`)
+    if (confirmar){
+        await borrarLibro(id);
+    }
+}
 
 // ============================================================
 // FAVORITOS — Gestion con localStorage
