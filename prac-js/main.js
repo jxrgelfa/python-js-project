@@ -42,6 +42,7 @@ formularioCrear.addEventListener("submit", (e) => {
 
 })
 
+<<<<<<< HEAD
 
 async function editarLibro(nuevoLibro, id) {
     try{
@@ -95,3 +96,63 @@ formularioEditar.addEventListener("submit", (e) =>{
 
     editarLibro(datosFormulario, id)
 })
+=======
+//-------local storage y render-----// 
+
+function getFavorites(){
+    const favs = localStorage.getItem('libros_favs');
+    return favs ? JSON.parse(favs) : [];
+}
+
+function toggleFavorite(libroId){
+    let favs = getFavorites()
+    const idStr = String(libroId)
+    if (favs.includes(idStr)){
+        favs = favs.filter(id => id !== idStr)
+    } else {
+        favs.push(idStr)
+    }
+    localStorage.setItem('libros_favs', JSON.stringify(favs))
+}
+
+function renderLibros(libros){
+    document.getElementById('librosContainer').innerHTML = '';
+    if (!libros.length){
+        document.getElementById('librosContainer').innerHTML = '<p class = "text-center w-full">No se encontraron libros para mostrar.</p>';
+        return;
+    }
+
+    libros.forEach(libro => {
+        const card = document.createElement('div');
+        card.className = 'bg-black p-4 rounded shadow text-center hover:shadow-lg transition';
+        const portada = libro.imagen;
+        const titulo = libro.nombre;
+        const precio = libro.precio;
+        const id = libro.id;
+
+        card.innerHTML = `
+            <img src="${portada}" alt="${titulo}" class="w-full h-60 object-cover rounded-md mb-3">
+            <h3 class="font-bold text-white mb-2">${titulo}</h3>
+            <h5 class="font-bold text-white mb-2">$${precio}</h5>
+            <div class="flex justify-center gap-1 mb-2" data-id="${id}">
+            </div>
+
+        `;
+        document.getElementById('librosContainer').appendChild(card);
+
+    });
+    
+}
+
+async function cargarLibros(){
+    try {
+        const res = await fetch(API_URL);
+        const libros = await res.json();
+        renderLibros(libros);
+    } catch (err) {
+        console.error("Error al obtener los libros", err);
+    }
+}
+
+cargarLibros();
+>>>>>>> 0fe178383799f18fc3011273240e9301347f56bc
