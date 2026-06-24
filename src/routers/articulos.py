@@ -34,7 +34,7 @@ libros = [
 
 
 ##########################
-# METODO GET
+# METODOS GET
 ##########################
 
 @articulos_routers.get("/", response_model=list[LibroSchema])
@@ -56,6 +56,12 @@ async def get_libros_id(id: Annotated[int, Path(gt=0, description="El ID debe se
             return libro
     raise HTTPException(status_code=404, detail="Producto no encontrado")
 
+
+
+##########################
+# METODO POST 
+##########################
+
 @articulos_routers.post(
         "/",
         response_model=list[LibroSchema])
@@ -66,6 +72,10 @@ async def publicar_libro(nuevo_libro:LibroSchema):
     libros.append(nuevo_libro.model_dump())
     return libros
 
+
+##########################
+# METODOS PUT
+##########################
 @articulos_routers.put("/{id}",responses=DICT_NOT_FOUND, response_model=LibroSchema)
 async def actualizar_libros(
     id:Annotated[int,Path(gt=0)],
@@ -78,6 +88,11 @@ async def actualizar_libros(
             libro["activo"] = libro_editar.activo
             return libro
     raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+
+##########################
+# METODO DELETE
+##########################
 
 @articulos_routers.delete(
     "/{id}",
