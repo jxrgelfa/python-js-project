@@ -79,7 +79,9 @@ async function editarLibro(nuevoLibro, id) {
 
 async function buscarPorId() {
     const id = document.getElementById("buscar-id").value;
-    if (!id) {alert("Debe ingresar un ID");return;}
+    if (!id) {alert("Debe ingresar un ID"); return;
+        
+    }
 
     try{
         const respuesta = await fetch(`${API_URL}${id}`);
