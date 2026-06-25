@@ -207,6 +207,15 @@ function toggleFavorite(libroId){
             ? 'bg-rose-500/20 border-rose-500 text-rose-500 shadow-lg' 
             : 'bg-slate-900/60 border-slate-700 text-slate-400 hover:text-white'}`
         btn.querySelector('svg').setAttribute('fill', isFavorite ? 'currentColor' : 'none')
+
+        // Actualiza en tiempo real los libros "favoritos"
+        const enVistaFavs = document.querySelector('#librosContainer .fav-banner');
+        if (enVistaFavs && !isFavorite) {
+            btn.closest('.relative').remove();
+            const restantes = document.querySelectorAll('#librosContainer .relative').length;
+            enVistaFavs.firstChild.textContent = `❤️ Mostrando ${restantes} favorito(s) — `;
+  
+        }
     }
 }
 
@@ -318,7 +327,7 @@ function renderFavoritos(){
     // Resalta visualmente que estamos en la vista de favoritos
     document.getElementById('librosContainer').insertAdjacentHTML(
         'afterbegin',
-        `<p class="text-center w-full text-yellow-400 font-bold mb-4">
+        `<p class="fav-banner text-center w-full text-yellow-400 font-bold mb-4">
             ❤️ Mostrando ${librosFav.length} favorito(s) — 
             <button onclick="cargarLibros()" class="underline">Ver todos</button>
         </p>`
