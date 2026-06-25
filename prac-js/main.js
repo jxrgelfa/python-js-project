@@ -179,6 +179,16 @@ function toggleFavorite(libroId){
         favs.push(idStr)
     }
     localStorage.setItem('libros_favs', JSON.stringify(favs))
+
+    // Actualizacion del icono
+    const btn = document.querySelector(`[data-fav-id="${idStr}"]`)
+    if (btn) {
+        const isFavorite = favs.includes(idStr)
+        btn.className = `fav-btn absolute top-3 right-3 p-2.5 rounded-2xl backdrop-blur-lg transition-all duration-300 border focus:outline-none ${isFavorite 
+            ? 'bg-rose-500/20 border-rose-500 text-rose-500 shadow-lg' 
+            : 'bg-slate-900/60 border-slate-700 text-slate-400 hover:text-white'}`
+        btn.querySelector('svg').setAttribute('fill', isFavorite ? 'currentColor' : 'none')
+    }
 }
 
 // Guarda el objeto completo del libro en localStorage
@@ -207,29 +217,57 @@ function renderLibros(libros){
         return;
     }
 
+    const favs = getFavorites();
+
     libros.forEach(libro => {
-        const card = document.createElement('div');
-        card.className = 'bg-black p-4 rounded shadow text-center hover:shadow-lg transition';
+    saveLibroData(libro);
 
-        let portada = libro.imagen;
-        if (!portada || portada === "null" || portada === null || portada.trim() === "") {
-            portada = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=300"; 
-        }
-        const titulo = libro.nombre;
-        const precio = libro.precio;
-        const id = libro.id;
+    const isFavorite = favs.includes(String(libro.id));
+    const card = document.createElement('div');
+    card.className = 'relative bg-black p-4 rounded shadow text-center hover:shadow-lg transition'; // 👈 relative acá
 
-        card.innerHTML = `
-            <img src="${portada}" alt="${titulo}" class="w-full h-60 object-cover rounded-md mb-3">
-            <h3 class="font-bold text-white mb-2">${titulo}</h3>
-            <h5 class="font-bold text-white mb-2">$${precio}</h5>
-            <div class="flex justify-center gap-1 mb-2" data-id="${id}">
-            </div>
+    let portada = libro.imagen;
+    if (!portada || portada === "null" || portada === null || portada.trim() === "") {
+        portada = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=300"; 
+    }
 
-        `;
-        document.getElementById('librosContainer').appendChild(card);
+    const titulo = libro.nombre;
+    const precio = libro.precio;
+    const id = libro.id;
 
+    // Como luce la carta entera 
+    // SVG de icono de corazon
+    card.innerHTML = `
+        <img src="${portada}" alt="${titulo}" class="w-full h-60 object-cover rounded-md mb-3">
+        <button
+            data-fav-id="${id}"
+            class="fav-btn absolute top-3 right-3 p-2.5 rounded-2xl backdrop-blur-lg transition-all duration-300 border focus:outline-none ${isFavorite 
+                ? 'bg-rose-500/20 border-rose-500 text-rose-500 shadow-lg' 
+                : 'bg-slate-900/60 border-slate-700 text-slate-400 hover:text-white'}"
+        >   
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="${isFavorite ? 'currentColor' : 'none'}" stroke="currentColor" viewBox="0 0 16 16">
+                <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+            </svg>
+        </button>
+        <h3 class="font-bold text-white mb-2">${titulo}</h3>
+        <h5 class="font-bold text-white mb-2">$${precio}</h5>
+    `;
+
+    card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-fav-id]')) return;
+        card.classList.toggle('ring-2');
+        card.classList.toggle('ring-white');
     });
+
+    card.querySelector('[data-fav-id]').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(id);
+    });
+
+    document.getElementById('librosContainer').appendChild(card);
+});
+
+    
     
 }
 
@@ -275,6 +313,11 @@ function renderFavoritos(){
 cargarLibros();
 
 
+// Trae solamente los libros favoritos
+const btnFavoritos = document.getElementById('btn-favoritos');
+if (btnFavoritos) {
+    btnFavoritos.addEventListener('click', renderFavoritos);
+}
 
     
     
