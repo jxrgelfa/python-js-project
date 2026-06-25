@@ -102,7 +102,7 @@ async def actualizar_libros(
 )
 async def eliminar_libro(
     id:Annotated[int,Path(gt=0)],
-    logico:Annotated[bool,Query(descrption="Indica si se debe eliminar un libro o no")] = True
+    logico:Annotated[bool,Query(description="Indica si se debe eliminar un libro o no")] = True
 ) -> LibroSchema: 
     for libro in libros: 
         if libro ["id"] == id:
