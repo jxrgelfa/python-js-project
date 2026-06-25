@@ -70,7 +70,11 @@ async function editarLibro(nuevoLibro, id) {
         });
 
         const datos = await respuesta.json();
-        console.log("respuesta PUT: ", datos)
+        console.log("respuesta PUT: ", datos);
+        if (respuesta.ok) {
+            saveLibroData({id: id, ...nuevoLibro});
+        }
+
         await cargarLibros();
 
     }catch (error) {
@@ -125,7 +129,7 @@ formularioEditar.addEventListener("submit", (e) =>{
 
 async function borrarLibro(id) { 
     try {
-        const respuesta = await fetch(`${API_URL}${id}?logico=true`,{
+        const respuesta = await fetch(`${API_URL}${id}?logico=false`,{
         method: "DELETE"
         });
 
@@ -133,6 +137,21 @@ async function borrarLibro(id) {
             const datos = await respuesta.json();
             console.log("Libro eliminado en la PI:", datos);
             alert(`Articulo con ID ${id} eliminado con exito`);
+
+
+            const idStr = String(id);
+
+            const todos = getLibrosData();
+            if(todos[idStr]) {
+                delete todos [idStr];
+                localStorage.setItem('libros_data', JSON.stringify(todos));
+            }
+
+            let favs = getFavorites();
+            if (favs.includes(idStr)){
+                favs=favs.filter(favId => favId !== idStr);
+                localStorage.setItem('libros_favs', JSON/stringify(favs));
+            }
 
             await cargarLibros();
             await obtenerLibros();
